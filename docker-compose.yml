@@ -1,0 +1,64 @@
+services:
+  flask1:
+
+    build: .
+    
+    container_name: flask1
+
+    ports:
+      - "1601:1601"
+
+    volumes:
+      - .:/app
+
+    env_file:
+      - .env
+
+  flask2:
+  
+    build: .
+    
+    container_name: flask2
+
+    ports:
+      - "1602:1601"
+
+    volumes:
+      - .:/app
+
+    env_file:
+      - .env
+
+  flask3:
+  
+    build: .
+    
+    container_name: flask3
+
+    ports:
+      - "1603:1601"
+
+    volumes:
+      - .:/app
+
+    env_file:
+      - .env    
+
+  nginx:
+
+    build: ./nginx
+
+    container_name: nginx1
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./app/static:/app/app/static
+      - /etc/letsencrypt:/etc/letsencrypt
+
+    depends_on:
+      - flask1
+      - flask2
+      - flask3
