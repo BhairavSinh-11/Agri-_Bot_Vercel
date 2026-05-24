@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 1601
 
-CMD ["gunicorn", "-b", "0.0.0.0:2423", "run:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:1601", "run:app"]
