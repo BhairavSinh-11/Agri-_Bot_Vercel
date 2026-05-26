@@ -25,7 +25,7 @@ services:
       - ./app/static:/app/app/static
 
     depends_on:
-      - flask
+      - flask1
 
     deploy:
       replicas: 1
