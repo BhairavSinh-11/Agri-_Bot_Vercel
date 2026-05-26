@@ -3,9 +3,6 @@ services:
   flask1:
     image: agribot:latest
 
-    volumes:
-      - .:/app
-
     env_file:
       - .env
 
