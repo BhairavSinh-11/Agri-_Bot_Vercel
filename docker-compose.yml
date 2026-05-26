@@ -1,7 +1,7 @@
 services:
 
   flask1:
-    build: .
+    build: agrbot:latest
 
     volumes:
       - .:/app
@@ -15,7 +15,7 @@ services:
         condition: any
 
   nginx:
-    build: ./nginx
+    build: agribot-nginx:latest
 
     ports:
       - "80:80"
