@@ -1,7 +1,7 @@
 services:
 
   flask1:
-    image: agrbot:latest
+    image: agribot:latest
 
     volumes:
       - .:/app
