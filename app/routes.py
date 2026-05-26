@@ -9,6 +9,7 @@ import os
 from werkzeug.utils import secure_filename
 import uuid
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+import socket
 
 
 main = Blueprint('main', __name__)
@@ -20,6 +21,14 @@ def clear_session():
     session.clear()
     return "Session cleared!"
 
+@main.route("/whoami")
+def whoami():
+    return {
+        "hostname": socket.gethostname(),
+        "authenticated": current_user.is_authenticated,
+        "user_id": current_user.get_id() if current_user.is_authenticated else None,
+        "session": dict(session)
+    }
 
 @main.route('/') 
 def home():
