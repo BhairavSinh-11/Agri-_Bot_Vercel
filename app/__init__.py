@@ -50,7 +50,13 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        print(f"LOAD_USER CALLED: {user_id}")
+
+        user = User.query.get(int(user_id))
+
+        print(f"FOUND USER: {user}")
+
+        return user
 
     with app.app_context():
         db.create_all()
