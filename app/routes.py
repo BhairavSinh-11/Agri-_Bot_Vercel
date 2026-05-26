@@ -8,7 +8,6 @@ from google.genai import types
 import os
 from werkzeug.utils import secure_filename
 import uuid
-import time
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
