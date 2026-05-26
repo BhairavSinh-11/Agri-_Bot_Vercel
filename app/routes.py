@@ -30,39 +30,39 @@ def whoami():
         "session": dict(session)
     }
 
-@main.route('/') 
+@main.route('/')
 def home():
-    user_data=session.get('user')
-    if user_data:
-        user_exists = User.query.filter_by(id=user_data['id']).first()
-        if not user_exists:
-            
-            # User was deleted from database, so clear session
-            
-            session.clear()
-    user=session.get('user','')
-    return render_template('home.html',username=user,active='home')
+
+    user = None
+
+    if current_user.is_authenticated:
+        user = {
+            "id": current_user.id,
+            "name": current_user.display_name,
+            "username": current_user.username,
+            "email": current_user.email
+        }
+
+    return render_template(
+        'home.html',
+        username=user,
+        active='home'
+    )
 
 
 #profile
 @main.route('/api/profile')
 @login_required
 def get_profile():
-    user = User.query.get(session['user']['id'])
-
-    
-    if not user:
-        return jsonify({"success": False, "message": "Not logged in"}), 401
 
     return jsonify({
         "success": True,
         "user": {
-            "name": user.display_name,
-            "username": user.username,
-            "email": user.email
+            "name": current_user.display_name,
+            "username": current_user.username,
+            "email": current_user.email
         }
     })
-
 
 #profile update route
 
@@ -70,10 +70,6 @@ def get_profile():
 @login_required
 @csrf.exempt
 def update_profile():
-    user_data = session.get('user')
-
-    if not user_data:
-        return jsonify({"success": False, "message": "Not logged in"}), 401
 
     data = request.get_json()
 
@@ -81,30 +77,19 @@ def update_profile():
     new_username = data.get("username")
 
     if not new_name or not new_username:
-     return jsonify({"success": False, "message": "All fields required"})
+        return jsonify({
+            "success": False,
+            "message": "All fields required"
+        })
 
-    # Update in DB
+    current_user.display_name = new_name
+    current_user.username = new_username
 
-    user = User.query.get(user_data['id'])
-    if not user:
-        return jsonify({"success": False, "message": "User not found"})
-
-    user.display_name=new_name
-    user.username = new_username
     db.session.commit()
 
-    # Update in session
-    
-    session['user'] = {
-    "id": user.id,
-    "name": new_name,
-    "username": new_username,
-    "email": user.email
-}
-
-    session.modified = True
-    return jsonify({"success": True})
-
+    return jsonify({
+        "success": True
+    })
 
 
 
